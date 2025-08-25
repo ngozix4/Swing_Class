@@ -1,4 +1,3 @@
-package learning;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,7 +12,7 @@ public class SwingClassLearning  extends JFrame{
 		// Set up main frame
 		
 		setTitle("Automation & Swing");
-		setSize(900, 700);
+		setSize(700, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null); // center the frame on screen
 		
@@ -42,18 +41,17 @@ public class SwingClassLearning  extends JFrame{
 		automationPanel.add(automationScrollPane, BorderLayout.CENTER);
 		
 		// Add an image related to automation  
-		JLabel imageLabel = new JLabel();
-		ImageIcon icon =  new ImageIcon("automation.webp");
-		imageLabel.setIcon(icon);
-		automationPanel.add(imageLabel, BorderLayout.SOUTH); // Place the image below textt
+		ImageIcon icon =  new ImageIcon("automation.png");
+		JLabel imageLabel = new JLabel("A robot", icon, JLabel.CENTER);
+		automationPanel.add(imageLabel, BorderLayout.EAST); // Place the image on the right
 		
 		//------------------ TAB 2: SWING COMPONENTS -------------------------
 		JPanel swingPanel = new JPanel();
 		swingPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
 		
-		JLabel lable = new JLabel("Choose your preferred SWING Component");
-		swingPanel.add(lable);
-		
+		JLabel label = new JLabel("Choose your preferred SWING Component");
+		swingPanel.add(label);
+
 		// ComboBox  for Swing Components
 		String[] components = {"JButton", "JCheckBox", "JTextField", "JTabbedPane"};
 		JComboBox<String> comboBox = new JComboBox<>(components);
