@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 public class pingPong extends JPanel implements KeyListener, ActionListener{
     // GAME CONSTANTS
@@ -25,7 +22,7 @@ public class pingPong extends JPanel implements KeyListener, ActionListener{
 
         // Player 2 - Up/Down arrow keys
         if (key == KeyEvent.VK_UP) {
-            if(player2Y > 0) // Prevent paddle from going out of bounds
+             if(player2Y> 0) // Prevent paddle from going out of bounds
                 player2Y -= PADDLE_SPEED;
         } else if (key == KeyEvent.VK_DOWN) {
             if(player2Y < HEIGHT - PADDLE_HEIGHT) // Prevent paddle from going out of bounds
@@ -57,6 +54,8 @@ public class pingPong extends JPanel implements KeyListener, ActionListener{
     private int ballYSpeed = 5;
     private int player1Score = 0;
     private int player2Score = 0;
+    private boolean gameStarted = false;
+    private boolean player1Serve = true;
     Timer gameTimer = new Timer(DELAY, this);
 
     // INITIALIZE GAME
@@ -65,19 +64,28 @@ public class pingPong extends JPanel implements KeyListener, ActionListener{
         setBackground(Color.BLACK);
         setFocusable(true);
         requestFocusInWindow();
-        addKeyListener((KeyListener) this);   
+        addKeyListener((KeyListener) this);  
+        addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (!gameStarted) {
+                gameStarted = true;
+                setBallDirection();
+            }
+        }
+    }); 
 
         resetGame();
         gameTimer.start();
     }
+
 
     public void resetGame() {
         player1Y = HEIGHT / 2 - PADDLE_HEIGHT / 2;
         player2Y = HEIGHT / 2 - PADDLE_HEIGHT / 2;
         ballX = WIDTH / 2 - BALL_SIZE / 2;
         ballY = HEIGHT / 2 - BALL_SIZE / 2;
-        ballXSpeed = 5;
-        ballYSpeed = 5;
+        gameStarted = false;
     }
 
     // GAME LOOP
@@ -88,6 +96,9 @@ public class pingPong extends JPanel implements KeyListener, ActionListener{
     }
 
     public void update() {
+        if (!gameStarted) {
+            return; // Skip update if game hasn't started
+        }
         // Update ball position
         ballX   += ballXSpeed;
         ballY += ballYSpeed;
@@ -123,12 +134,14 @@ public class pingPong extends JPanel implements KeyListener, ActionListener{
         if(ballX < 0) {
             // Player 2 scores
             player2Score++;
+            player1Serve = true;
             // play score sound
             resetGame();
         } 
         else if(ballX > WIDTH) {
             // Player 1 scores
             player1Score++;
+            player1Serve = false;
             // play score sound
             resetGame();
         }
@@ -137,6 +150,12 @@ public class pingPong extends JPanel implements KeyListener, ActionListener{
 
     @Override
     protected void paintComponent(Graphics g) {
+
+        if (!gameStarted) {
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 20));
+            g.drawString("Click to Start the Game", WIDTH / 2 - 70, HEIGHT / 2);
+        }
         super.paintComponent(g);
         g.setColor(Color.WHITE);
 
@@ -155,7 +174,15 @@ public class pingPong extends JPanel implements KeyListener, ActionListener{
         for (int y = 0; y < HEIGHT; y += 15) {
             g.fillRect(WIDTH / 2 , y, 2, 10);
         }
+    }
 
+    public void setBallDirection() {
+        if (player1Serve) {
+            ballXSpeed = 5; // Ball moves to the right
+        } else {
+            ballXSpeed = -5; // Ball moves to the left
+        }
+        ballYSpeed = 5; // Start with a downward movement
     }
     
 
