@@ -150,14 +150,14 @@ public class pingPong extends JPanel implements KeyListener, ActionListener{
 
     @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.WHITE);
 
         if (!gameStarted) {
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 20));
             g.drawString("Click to Start the Game", WIDTH / 2 - 70, HEIGHT / 2);
         }
-        super.paintComponent(g);
-        g.setColor(Color.WHITE);
 
         // Draw Score
         g.drawString("Player 1: " + player1Score, 50, 50);
